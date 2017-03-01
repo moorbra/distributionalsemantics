@@ -1,14 +1,14 @@
 FROM python:3
 
 # Set the application directory
-WORKDIR /app
+WORKDIR /semantics
 
 # Install our requirements.txt
-ADD requirements.txt /app/requirements.txt
+ADD requirements.txt /semantics/requirements.txt
 RUN pip install -r requirements.txt
 
 # Copy our code from the current folder to /app inside the container
-ADD . /app
+ADD . /semantics
 
 # Make port 5000 available for links and/or publish
 EXPOSE 80 
