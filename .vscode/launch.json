@@ -1,16 +1,26 @@
 {
     "version": "0.2.0",
-    "configurations": [
+    "configurations": [    
         {
-            "name": "Attach (Remote Debug)",
+            "name": "Flask",
             "type": "python",
-            "request": "attach",
-            "localRoot": "${workspaceRoot}",
-            "remoteRoot": "/semantics/",
-            "port": 8000,
-            //"secret": "my_secret",
-            "host": "localhost",
-            "restart":"true"
+            "request": "launch",
+            "stopOnEntry": false,
+            "pythonPath": "${config.python.pythonPath}",
+            "program": "${workspaceRoot}/run.py",
+            "env": {
+                "FLASK_APP": "${workspaceRoot}/app.py"
+            },
+            "args": [
+                "run",
+                "--no-debugger",
+                "--no-reload"
+            ],            
+            "debugOptions": [
+                "WaitOnAbnormalExit",
+                "WaitOnNormalExit",
+                "RedirectOutput"
+            ]
         }
     ]
 }
