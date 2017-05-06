@@ -1,23 +1,23 @@
-"""Wikipedia Categories microservice."""
+"""Wikipedia Document List microservice."""
 from flask_restful import Resource
 import requests
+import urllib
 
-class WikipediaCategory(Resource):
-    """Microservice for working with Wikipedia article catagories"""
+class WikipediaDocumentList(Resource):
+    """Microservice for working with Wikipedia document lists"""
 
     WIKI_API_BASE_URL = "https://en.wikipedia.org/w/api.php"
     WIKI_HEADERS = {'user-agent': 'mooresemantics/1.0.0'}
-
-    def get(self, startswith='a'):
-        """Returns a list of Wikipedia categories"""
+    
+    def get(self, category):
+        """Returns all the documents for a given category"""
         parameters = {
             'action': 'query',
             'format': 'json',
             'formatversion': 2,
-            'acprefix': startswith,
-            'list': 'allcategories',
-            'aclimit': 'max',
-            'acprop': 'size'
+            'cmtitle': f"Category:{category}",
+            'list': 'categorymembers',
+            'cmlimit': 'max'
         }
         result = requests.get(self.WIKI_API_BASE_URL,
                               params=parameters,
@@ -26,5 +26,4 @@ class WikipediaCategory(Resource):
         if 'error' in result:
             raise Exception(result['error'])
 
-        return [category for category in result['query']['allcategories'] if category['size'] > 0]
-    
+        return result['query']  
