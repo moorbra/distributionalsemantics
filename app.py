@@ -12,6 +12,10 @@ api = Api(app)
 def index():
     return render_template('index.html')
 
+@app.route('/wikipedia')
+def wikipedia():
+    return render_template('wikipedia.html')
+
 api.add_resource(WikipediaCategory, '/wikipedia/categories',
                  '/wikipedia/categories/<string:startswith>')
 
