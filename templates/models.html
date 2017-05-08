@@ -30,16 +30,18 @@
                             </td>
                         <tr>                    
                         <tr>
-                            <th></th>
+                            <th>View</th>
                             <th>Model</th>
                             <th>Documents</th>
                             <th>Terms</th>
+                            <th>Delete</th>
                         </tr>
                         <tr dir-paginate="model in models | itemsPerPage: modelsPerPage" pagination-id="mods">
-                            <td><a class="btn btn-primary" ng-click="getModelDetails(model.modelname)"><i class="fa fa-folder-open" aria-hidden="true"></i></a></td>
+                            <td><a class="btn btn-default" ng-click="getModelDetails(model.modelname)" title="Click to view terms."><i class="fa fa-list" aria-hidden="true"></i></a></td>
                             <td>{{model.modelname}}</td>
                             <td>{{model.numberdocuments}}</td>
                             <td>{{model.terms}}</td>
+                            <td><a class="btn btn-danger" ng-click="deleteModel(model.modelname)" title="Click to delete model."><i class="fa fa-trash-o" aria-hidden="true"></i></a></td>
                         </tr>
                     </table>
                     {% endraw %}
@@ -47,56 +49,136 @@
                 </div>
             </div>
         </div>
-        <div class="row">    
-            <div class="col-md-5">    
-                <div class="panel panel-default">
-                    {% raw %}
-                    <div class="panel-heading">Terms in model <mark>'{{selectedModel.modelname}}'</mark></div>
-                    <table class="table table-condensed table-hover">
-                        <thead>
-                        <tr>
-                            <td colspan="3">
-                                <div class="input-group">
-                                    <input type="number" class="form-control" ng-model="termsPerPage"/>
-                                    <span class="input-group-addon">per page</span>
+        <div class="row">
+            <div class="col-md-12">
+                <uib-tabset>
+                    <uib-tab heading="Term Similarity">
+                        <div class="row">
+                            <div class="col-md-4">    
+                                <div class="panel panel-default">
+                                    {% raw %}
+                                    <div class="panel-heading">Terms in model <mark>'{{selectedModel.modelname}}'</mark></div>
+                                    <table class="table table-condensed table-hover">
+                                        <thead>
+                                        <tr>
+                                            <td colspan="3">
+                                                <div class="input-group">
+                                                    <input type="number" class="form-control" ng-model="termsPerPage"/>
+                                                    <span class="input-group-addon">per page</span>
+                                                </div>
+                                            </td>
+                                        <tr>                    
+                                        <tr>
+                                            <th>Term</th>
+                                            <th>Similar</th>
+                                            <th>Opposite</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr dir-paginate="term in selectedModel.terms | itemsPerPage: termsPerPage" pagination-id="trms">
+                                            <td>{{term}}</td>
+                                            <td><a class="btn btn-default" ng-click="getTermSimilarities(term, 'positive')" title="Click to view similar terms."><i class="fa fa-plus" aria-hidden="true"></i></a></td>
+                                            <td><a class="btn btn-default" ng-click="getTermSimilarities(term, 'negative')" title="Click to view dissimilar terms."><i class="fa fa-minus" aria-hidden="true"></i></a></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>                
+                                    {% endraw %}
+                                    <dir-pagination-controls boundary-links="true" template-url="{{url_for('static', filename='dirPagination.tpl.html')}}" pagination-id="trms"></dir-pagination-controls>
                                 </div>
-                            </td>
-                        <tr>                    
-                        <tr>
-                            <th>Term</th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr dir-paginate="term in selectedModel.terms | itemsPerPage: termsPerPage" pagination-id="trms">
-                            <td>{{term}}</td>
-                            <td><a class="btn btn-primary" ng-click="getTermSimilarities(term)"><i class="fa fa-search" aria-hidden="true"></i> View Similar Terms</a></td>
-                        </tr>
-                        </tbody>
-                    </table>                
-                    {% endraw %}
-                    <dir-pagination-controls boundary-links="true" template-url="{{url_for('static', filename='dirPagination.tpl.html')}}" pagination-id="trms"></dir-pagination-controls>
-                </div>
-            </div>
-            <div class="col-md-7">
-                <div class="panel panel-default">
-                    {% raw %}
-                    <div class="panel-heading">Terms most similar to <mark>'{{similarterms.term}}'</mark></div>
-                    <table class="table table-condensed table-hover">
-                        <caption>{{similarterms.sentence}}</caption>
-                        <tr>
-                            <th>Term</th>
-                            <th>Similarity</th>
-                            <th>Example Sentence</th>
-                        </tr>
-                        <tr ng-repeat="term in similarterms.similarterms">
-                            <td>{{term.term}}</td>
-                            <td>{{term.similarity}}</td>
-                            <td>{{term.sentence}}</td>
-                        </tr>
-                    </table>
-                    {% endraw %}
-                </div>
+                            </div>        
+                            <div class="col-md-8">
+                                <div class="panel panel-default">
+                                    {% raw %}
+                                    <div class="panel-heading">Terms <mark><strong>{{similarterms.direction === "positive" ? "most" : "least"}}</strong> similar to <strong>{{similarterms.term}}</strong></mark>.</div>
+                                    <table class="table table-condensed table-hover">
+                                        <caption>{{similarterms.sentence}}</caption>
+                                        <tr>
+                                            <th>Term</th>
+                                            <th>Similarity</th>
+                                            <th>Example Sentence</th>
+                                        </tr>
+                                        <tr ng-repeat="term in similarterms.similarterms">
+                                            <td>{{term.term}}</td>
+                                            <td>{{term.similarity}}</td>
+                                            <td>{{term.sentence}}</td>
+                                        </tr>
+                                    </table>
+                                    {% endraw %}
+                                </div>
+                            </div>           
+                        </div>         
+                    </uib-tab>
+                    <uib-tab heading="Term Algebra">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">Term Algebra</div>
+                                    <div class="panel-body">
+                                        <form>
+                                            <div class="form-group">
+                                                <label for="terma">Term A</label>
+                                                <input type="text" class="form-control" id="terma" name="terma" ng-model="terma" placeholder="Term A">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="termb">Term B</label>
+                                                <input type="text" class="form-control" id="termb" name="termb" ng-model="termb" placeholder="Term B">
+                                            </div>
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" name="direction" id="positiveoption" ng-model="direction" value="positive" checked>
+                                                    <i class="fa fa-plus" aria-hidden="true"></i> Add
+                                                </label>
+                                            </div>
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" name="direction" id="negativeoption" value="negative" ng-model="direction">
+                                                    <i class="fa fa-minus" aria-hidden="true"></i> Subtract
+                                                </label>
+                                            </div>    
+                                            <button type="submit" class="btn btn-primary" ng-click="calculateTermSimilarites(terma, termb, direction)">Calculate</button>                                    
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="panel panel-default">
+                                    {% raw %}
+                                    <div class="panel-heading" ng-switch="calculatedSimularities.direction">
+                                        <div ng-switch-when="positive">
+                                            Term <mark><strong>{{calculatedSimularities.terma}}</strong></mark> <strong>added to</strong> <mark><strong>{{calculatedSimularities.termb}}</strong></mark> is most similar to the terms below.
+                                        </div>
+                                        <div ng-switch-when="negative">
+                                            Term <mark><strong>{{calculatedSimularities.termb}}</strong></mark> <strong>subtraced from</strong> <mark><strong>{{calculatedSimularities.terma}}</strong></mark> is most similar to the terms below.
+                                        </div>                                        
+                                    </div>
+                                    <table class="table table-condensed table-hover">
+                                        <caption>                                            
+                                            <strong>{{calculatedSimularities.terma}}</strong>
+                                            <p>
+                                                {{calculatedSimularities.sentenceTerma}}
+                                            </p>
+                                            <strong>{{calculatedSimularities.termb}}</strong>
+                                            <p>
+                                                {{calculatedSimularities.sentenceTermb}}
+                                            </p>
+                                        </caption>
+                                        <tr>
+                                            <th>Term</th>
+                                            <th>Similarity</th>
+                                            <th>Example Sentence</th>
+                                        </tr>
+                                        <tr ng-repeat="term in calculatedSimularities.similarterms">
+                                            <td>{{term.term}}</td>
+                                            <td>{{term.similarity}}</td>
+                                            <td>{{term.sentence}}</td>
+                                        </tr>
+                                    </table>                                
+                                    {% endraw %}
+                                </div>
+                            </div>
+                        </div>         
+                    </uib-tab>                
+                </uib-tabset>
             </div>
         </div>            
       </div>

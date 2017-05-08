@@ -5,11 +5,13 @@ import os
 import en_core_web_sm
 import datetime
 import json
+import shutil
 from gensim.models import Word2Vec
 from gensim.models.keyedvectors import KeyedVectors
 
 class Modeller(Resource):
     """Microservice for creating a semantic space from a corpus."""
+    MODEL_BASE_DIRECTORY = "wikimodels"
     corpuspath = ""
     modelname = ""
     nlp = en_core_web_sm.load()
@@ -65,21 +67,8 @@ class Modeller(Resource):
                                   and not token.is_stop])
         return sentences
 
-
-# class SentenceParser(object):
-#     def __init__(self, directoryname):
-#         self.directoryname = directoryname
-#         self.nlp = en_core_web_sm.load()
-
-#     def __iter__(self):
-#         for filename in os.listdir(self.directoryname):
-#             content = ""
-#             with open(os.path.join(self.directoryname, filename)) as fdoc:
-#                 content = fdoc.read()
-
-#             for doc in self.nlp.pipe(content, batch_size=10000, n_threads=3):
-#                 for sentence in doc.sents:
-#                     sentence_tokens = [token.lower_ for token in sentence
-#                                        if not token.is_punct and not token.is_space]
-#                     yield sentence_tokens
-
+    def delete(self, modelname):
+        filepath = os.path.join(self.MODEL_BASE_DIRECTORY,modelname)
+        if os.path.exists(filepath):
+            shutil.rmtree(filepath)
+        return jsonify({'removeddirectory': filepath})

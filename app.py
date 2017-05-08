@@ -32,14 +32,17 @@ api.add_resource(WikipediaDocumentList, '/wikipedia/documentlist/<string:categor
 
 api.add_resource(WikipediaDocument, '/wikipedia/document/<string:document_id>')
 
-api.add_resource(Modeller, '/modeller/createmodel')
+api.add_resource(Modeller, '/modeller/createmodel',
+                 '/modeller/<string:modelname>')
 
 api.add_resource(ModelManifest, '/manifest/manifests',
                  '/manifest/manifests/<string:modelname>')
 
 api.add_resource(ModelTerm, '/term/<string:modelname>/<string:term>')
 
-api.add_resource(TermSimilarity, '/similarity/<string:modelname>/<string:term>')
+api.add_resource(TermSimilarity, '/similarity/<string:modelname>/<string:term>',
+                 '/similarity/<string:modelname>/<string:term>/<string:direction>',
+                 '/similarity/compareterms')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80, debug=True)

@@ -78,6 +78,10 @@
         $scope.selectedModel = null;
         $scope.termsPerPage = 10;
         $scope.similarterms = null;
+        $scope.terma = "";
+        $scope.termb = "";
+        $scope.direction = "";
+        $scope.calculatedSimularities = null;
 
         $scope.getModels = function () {
             $http.get('manifest/manifests')
@@ -93,11 +97,26 @@
             });
         };
 
-        $scope.getTermSimilarities = function(term) {
-            $http.get('similarity/' + $scope.selectedModel.modelname + '/'+ term)
+        $scope.getTermSimilarities = function(term, direction) {
+            $http.get('similarity/' + $scope.selectedModel.modelname + '/'+ term + '/' + direction)
             .then(function (data, status, headers, config) {
                 $scope.similarterms = data.data;
             });            
+        };
+
+        $scope.deleteModel = function(modelName) {
+            $scope.selectedModel = null;
+            $http.delete('modeller/' + $scope.selectedModel.modelname)
+            .then(function (data, status, headers, config) {
+                $scope.getModels();
+            });            
+        };
+
+        $scope.calculateTermSimilarites = function(terma, termb, direction) {
+            $http.post('similarity/compareterms', {'modelname': $scope.selectedModel.modelname, 'terms': [terma, termb], 'direction': direction})
+            .then(function (data, status, headers, config) {
+                $scope.calculatedSimularities = data.data;
+            });
         };
 
         $scope.getModels();

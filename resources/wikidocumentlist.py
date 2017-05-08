@@ -1,7 +1,10 @@
 """Wikipedia Document List microservice."""
 from flask import request, jsonify
 from flask_restful import Resource
-import requests, os, urllib, shutil
+import requests
+import os
+import urllib
+import shutil
 
 class WikipediaDocumentList(Resource):
     """Microservice for working with Wikipedia document lists"""

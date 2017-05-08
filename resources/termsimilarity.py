@@ -13,25 +13,40 @@ class TermSimilarity(Resource):
     MODEL_BASE_DIRECTORY = "wikimodels"
     modelname = ""
 
-    def get(self, modelname, term):
+    def get(self, modelname, term, direction="positive"):
         self.modelname = modelname
-        model = self.load_model(modelname)
-        similar_terms = self.get_similar_terms(model, term)
+        model = self.load_model()
+        similar_terms = self.get_similar_terms(model, [term], direction)
         return {
+            'direction': direction,
             'term': term,
             'sentence': self.find_sentence_for_term(term),
             'similarterms' : similar_terms
         }
 
-    def get_similar_terms(self, model, term):
-        # similar_terms = []
-        # for word, similarity in model.most_similar(positive=[term], topn=10):
-        #     similar_terms.append({ 'term' : word, 'similarity': similarity, 'sentence': self.find_sentence_for_term(word) })
-        # return similar_terms
-        return [{ 'term' : word, 'similarity': similarity, 'sentence': self.find_sentence_for_term(word) } for word, similarity in model.most_similar(positive=[term], topn=10)]
+    def post(self):
+        args = request.get_json(force=True)
+        self.modelname = args['modelname']
+        model = self.load_model()        
+        similar_terms = self.get_similar_terms(model, args['terms'], args['direction'])
+        return {
+            'direction': args['direction'],
+            'terma': args['terms'][0],
+            'termb': args['terms'][1],
+            'sentenceTerma': self.find_sentence_for_term(args['terms'][0]),
+            'sentenceTermb': self.find_sentence_for_term(args['terms'][1]),
+            'similarterms' : similar_terms
+        }        
 
-    def load_model(self, modelname):
-        return Word2Vec.load(os.path.join(self.MODEL_BASE_DIRECTORY, modelname, modelname)).wv
+    def get_similar_terms(self, model, terms, direction):
+        if direction == "positive":
+            return [{ 'term' : word, 'similarity': similarity, 'sentence': self.find_sentence_for_term(word) } for word, similarity in model.most_similar(positive=terms, topn=10)]
+
+        return [{ 'term' : word, 'similarity': similarity, 'sentence': self.find_sentence_for_term(word) } for word, similarity in model.most_similar(negative=terms, topn=10)]
+        
+
+    def load_model(self):
+        return Word2Vec.load(os.path.join(self.MODEL_BASE_DIRECTORY, self.modelname, self.modelname)).wv
 
     def find_sentence_for_term(self, term):
         for filename in os.listdir(os.path.join(self.MODEL_BASE_DIRECTORY, self.modelname)):
