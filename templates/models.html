@@ -1,12 +1,17 @@
 {% extends "layout.html" %}
 {% block title %}Distributional Models{% endblock %}
 {% block content%}
-    <div class="container" ng-controller="modelsController">
+    <div ng-controller="modelsController">
         <div class="row">
             <div class="jumbotron">                
-                <h1>Explore the semantic models</h1>
+                <h1>Explore the semantic models!</h1>
                 <p>
-                    Select a model and explore! Select multiple models for side-by-side comparison.
+                    Select a model and explore! View the terms in the model. 
+                    Drill down on a term to find other similar terms.
+                    Each term is presented with a representative sentence and a similarity score.
+                </p>
+                <p>
+                    Models are trained using 200 dimensions. A term must appear at least 3 times in the corpus to get included.
                 </p>
             </div>
         </div>

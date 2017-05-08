@@ -1,30 +1,74 @@
 {% extends "layout.html" %}
 {% block title %}Welcome to Semantics{% endblock %}
-{% block content%}
-    <div class="jumbotron">
-        <div class="container">
-            <h1>Hello, world!</h1>
-            <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
-            <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
-        </div>
-    </div>
-
-    <div class="container">
-      <div class="row">
-        <div class="col-md-4">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-        </div>
-        <div class="col-md-4">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-       </div>
-        <div class="col-md-4">
-          <h2>Heading</h2>
-          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-        </div>
-      </div>    
+{% block content%}    
+      <div class="jumbotron">
+              <h1>Welcome!</h1>
+              <p>
+                This site is a prototype for an enterprise level application for text analytics. 
+              </p>
+              <p>
+                The concept:
+                <ul>
+                  <li>The system could be deployed in an enterprise or offered as software as a service (SaaS).</li>
+                  <li>A system administrator can maintain the model through the application.</li>
+                  <li>The complexities of semantic modelling are abstracted from the administrator.</li>
+                  <li>The application could have many corpus providers. It is currently integrated with Wikipedia.</li>
+                  <li>The application can create a model from a corpus.</li>
+                  <li>Models can get built for specific domains (ex: mortgage industry, automobile repair, cloud management).</li>
+                  <li>Models can get distributed and imported into the system.</li>       
+                  <li>A model can get integrated into a knowledge management system (KMS).</li>
+                  <li>A semantic model can improve a KMS by auto-indexing, improving retrieval with semantic similarity queries, integrating into data driven workflow.</li>
+                </ul>                
+              </p>
+              <a href="/wikipedia" class="btn btn-primary btn-lg">Try it out!</a>
+      </div>
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          Technology Stack
+        </div>   
+        <div class="table-responsive">
+            <table class="table table-striped table-condensed">
+                <tr>
+                    <th>Technology</th>
+                    <th>Role</th>
+                    <th>Reference</th>
+                </tr>
+                <tr>
+                  <td>Python</td>
+                  <td>Programming language widely used for natural language processing tasks.</td>
+                  <td><a href="https://www.python.org/" target="reference">https://www.python.org</a></td>
+                </tr>
+                <tr>
+                  <td>Flask</td>
+                  <td>Python microframework for creating a web server.</td>
+                  <td><a href="http://flask.pocoo.org/" target="reference">http://flask.pocoo.org</a></td>
+                </tr> 
+                <tr>
+                  <td>Flask-RESTful</td>
+                  <td>An extension to Flask for creating a RESTful application programming interface (API).</td>
+                  <td><a href="https://flask-restful.readthedocs.io/en/0.3.5/" target="reference">https://flask-restful.readthedocs.io/en/0.3.5/</a></td>                  
+                </tr>
+                <tr>
+                  <td>MediaWiki</td>
+                  <td>Wikipedia API. Used in this application to retrieve documents from Wikipedia in real-time.</td>
+                  <td><a href="https://www.mediawiki.org/wiki/API:Main_page" target="reference">https://www.mediawiki.org/wiki/API:Main_page</a></td> 
+                </tr>                   
+                <tr>
+                  <td>Gensim</td>
+                  <td>Python model for generating semantic models.</td>
+                  <td><a href="https://radimrehurek.com/gensim/" target="reference">https://radimrehurek.com/gensim/</a></td>                  
+                </tr>  
+                <tr>
+                  <td>spaCy</td>
+                  <td>Python package for natural language processing. Used in this project for text pre-processing and tokenization.</td>
+                  <td><a href="https://spacy.io/" target="reference">https://spacy.io/</a></td>                  
+                </tr>                
+                <tr>
+                  <td>AngualrJS</td>
+                  <td>Javascript based client-side model-view-controller (MVC) framework. Used in this project to bind the web pages to data received from the API.</td>
+                  <td><a href="https://angularjs.org/" target="reference">https://angularjs.org/</a></td> 
+                </tr>                                                               
+            </table>
+        </div>               
+      </div>      
 {% endblock %}
