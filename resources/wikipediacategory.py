@@ -26,5 +26,6 @@ class WikipediaCategory(Resource):
         if 'error' in result:
             raise Exception(result['error'])
 
-        return [category for category in result['query']['allcategories'] if category['size'] > 0]
+        return [category for category in result['query']['allcategories']
+                if category['size'] > 0 and category['pages'] > 0]
     

@@ -13,6 +13,7 @@
        $scope.corpDocsPerPage = 10;
        $scope.creatingModel = false;
        $scope.showCorpus = true;
+       $scope.logs = []
 
        $scope.getCategories = function() {
             resource = $scope.categoryFilter == "" ? "wikipedia/categories" : "wikipedia/categories/" + $scope.categoryFilter;
@@ -48,13 +49,26 @@
             $scope.corpus = $scope.corpus.filter(function(el) { return el.title != documentTitle; });
        };
 
-       $scope.createModel = function() {
+       $scope.createModel = function(wikimodelname) {
             spinnerService.show('createModelSpinner');
             $scope.showCorpus = false;
-
-            //         .finally(function () {
-            // spinnerService.hide('topicsSpinner');
-        //});
+            $scope.logs = [];
+            $scope.logs.push("Downloading documents from Wikipedia.");
+            $http.post('wikipedia/documentlist', {'documents' : $scope.corpus, 'modelName': wikimodelname})
+            .then(function (data, status, headers, config) {
+                corpusManifest = data.data;
+                $scope.logs.push("Downloaded " + corpusManifest.downloadedDocuments + " from Wikipedia.");
+                $scope.logs.push("Creating distributional semantic model.");
+                $http.post('modeller/createmodel', {'corpusPath' : corpusManifest.corpusPath, 'modelname': wikimodelname})
+                .then(function (data, status, headers, config) {
+                    modelManifest = data.data
+                    $scope.logs.push("Created model with " + modelManifest.numberterms + " terms.");
+                })
+            })
+            .finally(function() {
+                spinnerService.hide('createModelSpinner');
+                $scope.showCorpus = true;
+            });
        };
     });
 }());
