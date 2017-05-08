@@ -14,13 +14,16 @@
        $scope.creatingModel = false;
        $scope.showCorpus = true;
        $scope.logs = []
+       $scope.showDocuments = false;
 
        $scope.getCategories = function() {
+           $scope.showDocuments = false;
             resource = $scope.categoryFilter == "" ? "wikipedia/categories" : "wikipedia/categories/" + $scope.categoryFilter;
             $scope.categoryFilter = $scope.categoryFilter == "" ? "a" : $scope.categoryFilter
             $http.get(resource)
             .then(function(data, status, header, config) {
                 $scope.categories = data.data;
+                $scope.showCategories = true;
             });
        };
 
@@ -29,6 +32,7 @@
             .then(function(data, status, header, config) {
                 $scope.selectedCategory = category;                
                 $scope.documents = data.data.categorymembers;
+                $scope.showDocuments = true;
             });
        };
 
@@ -82,6 +86,9 @@
         $scope.termb = "";
         $scope.direction = "";
         $scope.calculatedSimularities = null;
+        $scope.showmodeldetails = false;
+        $scope.showTermSimilarity = false;
+        $scope.showCalculationSimilarity = false;
 
         $scope.getModels = function () {
             $http.get('manifest/manifests')
@@ -94,6 +101,9 @@
             $http.get('manifest/manifests/' + modelname)
             .then(function (data, status, headers, config) {
                 $scope.selectedModel = data.data;
+                $scope.showmodeldetails = true;
+                $scope.showTermSimilarity = false;
+                $scope.showCalculationSimilarity = false;                
             });
         };
 
@@ -101,12 +111,16 @@
             $http.get('similarity/' + $scope.selectedModel.modelname + '/'+ term + '/' + direction)
             .then(function (data, status, headers, config) {
                 $scope.similarterms = data.data;
+                $scope.showTermSimilarity = true;                        
             });            
         };
 
-        $scope.deleteModel = function(modelName) {
+        $scope.deleteModel = function(modelname) {
             $scope.selectedModel = null;
-            $http.delete('modeller/' + $scope.selectedModel.modelname)
+            $scope.showmodeldetails = false;
+            $scope.showTermSimilarity = false;
+            $scope.showCalculationSimilarity = false;             
+            $http.delete('modeller/' + modelname)
             .then(function (data, status, headers, config) {
                 $scope.getModels();
             });            
@@ -116,6 +130,7 @@
             $http.post('similarity/compareterms', {'modelname': $scope.selectedModel.modelname, 'terms': [terma, termb], 'direction': direction})
             .then(function (data, status, headers, config) {
                 $scope.calculatedSimularities = data.data;
+                $scope.showCalculationSimilarity = true;
             });
         };
 

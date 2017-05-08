@@ -13,6 +13,9 @@
                 <p>
                     Models are trained using 200 dimensions. A term must appear at least 3 times in the corpus to get included.
                 </p>
+                <p>
+                    Click the <button class="btn btn-default"><i class="fa fa-list" aria-hidden="true"></i></button> button in the list of models to explore a model.
+                </p>
             </div>
         </div>
         <div class="row">
@@ -49,7 +52,7 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row" ng-show="showmodeldetails">
             <div class="col-md-12">
                 <uib-tabset>
                     <uib-tab heading="Term Similarity">
@@ -87,9 +90,9 @@
                                 </div>
                             </div>        
                             <div class="col-md-8">
-                                <div class="panel panel-default">
+                                <div class="panel panel-default" ng-show="showTermSimilarity">
                                     {% raw %}
-                                    <div class="panel-heading">Terms <mark><strong>{{similarterms.direction === "positive" ? "most" : "least"}}</strong> similar to <strong>{{similarterms.term}}</strong></mark>.</div>
+                                    <div class="panel-heading">Terms <mark>{{similarterms.direction === "positive" ? "most" : "least"}} similar to <strong>{{similarterms.term}}</strong></mark>.</div>
                                     <table class="table table-condensed table-hover">
                                         <caption>{{similarterms.sentence}}</caption>
                                         <tr>
@@ -141,7 +144,7 @@
                                 </div>
                             </div>
                             <div class="col-md-8">
-                                <div class="panel panel-default">
+                                <div class="panel panel-default" ng-show="showCalculationSimilarity">
                                     {% raw %}
                                     <div class="panel-heading" ng-switch="calculatedSimularities.direction">
                                         <div ng-switch-when="positive">

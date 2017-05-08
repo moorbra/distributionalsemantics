@@ -19,123 +19,127 @@
                 </form>
             </div>
       </div>  
-      <uib-tabset>
-          <uib-tab heading="Wikipedia Search">        
-            <div class="row">
-                <div class="col-md-6">
-                    {% raw %}
-                    <div class="panel panel-default">                
-                        <div class="panel-heading">{{categories.length}} categories that start with "{{categoryFilter}}"</div>   
-                        <table class="table table-condensed table-hover">
-                            <thead>
-                                <tr>
-                                    <td>
-                                        <div class="input-group">
-                                            <input type="number" class="form-control" ng-model="categoriesPerPage"/>
-                                            <span class="input-group-addon">per page</span>
-                                        </div>
-                                    </td>
-                                <tr>
-                                <tr>
-                                    <th>Category</th>
-                                    <th>Documents</th>
-                                    <th></th>
-                                </tr>  
-                            </thead>
-                            <tbody>              
-                                <tr dir-paginate="category in categories | itemsPerPage: categoriesPerPage" pagination-id="cats">
-                                    <td>{{category.category}}</td>
-                                    <td>{{category.pages}}</td>
-                                    <td><a href="#" class="btn btn-primary" ng-click="getDocuments(category.category)" title="Click to view documents."><i class="fa fa-folder-open-o" aria-hidden="true"></i></td>
-                                </tr>
-                            </tbody>
-                        </table>                
-                        {% endraw %}
-                        <dir-pagination-controls boundary-links="true" template-url="{{url_for('static', filename='dirPagination.tpl.html')}}" pagination-id="cats"></dir-pagination-controls>    
-                        
+      <div class="row" ng-show="showCategories">
+          <div class="col-md-12">
+            <uib-tabset>
+                <uib-tab heading="Wikipedia Search">        
+                    <div class="row">
+                        <div class="col-md-6">
+                            {% raw %}
+                            <div class="panel panel-default">                
+                                <div class="panel-heading">{{categories.length}} categories that start with "{{categoryFilter}}"</div>   
+                                <table class="table table-condensed table-hover">
+                                    <thead>
+                                        <tr>
+                                            <td>
+                                                <div class="input-group">
+                                                    <input type="number" class="form-control" ng-model="categoriesPerPage"/>
+                                                    <span class="input-group-addon">per page</span>
+                                                </div>
+                                            </td>
+                                        <tr>
+                                        <tr>
+                                            <th>Category</th>
+                                            <th>Documents</th>
+                                            <th></th>
+                                        </tr>  
+                                    </thead>
+                                    <tbody>              
+                                        <tr dir-paginate="category in categories | itemsPerPage: categoriesPerPage" pagination-id="cats">
+                                            <td>{{category.category}}</td>
+                                            <td>{{category.pages}}</td>
+                                            <td><a href="#" class="btn btn-primary" ng-click="getDocuments(category.category)" title="Click to view documents."><i class="fa fa-folder-open-o" aria-hidden="true"></i></td>
+                                        </tr>
+                                    </tbody>
+                                </table>                
+                                {% endraw %}
+                                <dir-pagination-controls boundary-links="true" template-url="{{url_for('static', filename='dirPagination.tpl.html')}}" pagination-id="cats"></dir-pagination-controls>    
+                                
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="panel panel-default" ng-show="showDocuments">
+                                {% raw %}
+                                <div class="panel-heading">{{documents.length}} documents for category "{{selectedCategory}}"</div>  
+                                <flash-message></flash-message>              
+                                <table class="table table-condensed table-hover">
+                                    <thead>
+                                        <tr>
+                                            <td colspan="2">
+                                                <div class="input-group">
+                                                    <input type="number" class="form-control" ng-model="documentsPerPage"/>
+                                                    <span class=input-group-addon>per page</span>
+                                                </div>
+                                            </td>
+                                        <tr>                    
+                                        <tr>                            
+                                            <th>Document</th>
+                                            <th>View</th>
+                                            <th>Use</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr dir-paginate="document in documents | itemsPerPage: documentsPerPage" pagination-id="docs">                            
+                                            <td>{{document.title}}</td>
+                                            <td><a ng-href="https://en.wikipedia.org/wiki/{{ document.title.replace(' ', '_') }}" class="btn btn-default" target="wiki" title="Click to view document."><i class="fa fa-eye" aria-hidden="true"></i></a></td>
+                                            <td><button class="btn btn-primary" ng-click="addDocument(document.title, selectedCategory)" title="Click to add document to corpus."><i class="fa fa-plus" aria-hidden="true"></i></button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                {% endraw %}
+                                <dir-pagination-controls boundary-links="true" template-url="{{url_for('static', filename='dirPagination.tpl.html')}}" pagination-id="docs"></dir-pagination-controls>   
+                            </div> 
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="panel panel-default">
+                </uib-tab>
+                <uib-tab heading="Corpus">
+                    <spinner name="createModelSpinner" img-src="{{url_for('static', filename='spinner.gif')}}"></spinner>
+                    <div class="panel panel-default" ng-show="showCorpus">
                         {% raw %}
-                        <div class="panel-heading">{{documents.length}} documents for category "{{selectedCategory}}"</div>  
-                        <flash-message></flash-message>              
+                        <div class="panel-heading">{{corpus.length}} documents selected for corpus.</div>
                         <table class="table table-condensed table-hover">
-                            <thead>
                                 <tr>
                                     <td colspan="2">
                                         <div class="input-group">
-                                            <input type="number" class="form-control" ng-model="documentsPerPage"/>
+                                            <input type="number" class="form-control" ng-model="corpDocsPerPage"/>
                                             <span class=input-group-addon>per page</span>
                                         </div>
                                     </td>
-                                <tr>                    
-                                <tr>                            
-                                    <th>Document</th>
-                                    <th>View</th>
-                                    <th>Use</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr dir-paginate="document in documents | itemsPerPage: documentsPerPage" pagination-id="docs">                            
-                                    <td>{{document.title}}</td>
-                                    <td><a ng-href="https://en.wikipedia.org/wiki/{{ document.title.replace(' ', '_') }}" class="btn btn-default" target="wiki" title="Click to view document."><i class="fa fa-eye" aria-hidden="true"></i></a></td>
-                                    <td><button class="btn btn-primary" ng-click="addDocument(document.title, selectedCategory)" title="Click to add document to corpus."><i class="fa fa-plus" aria-hidden="true"></i></button></td>
-                                </tr>
-                            </tbody>
+                                    <td colspan="2">
+                                        <form class="form-inline">
+                                            <div class="form-group">
+                                                <label for="corpusName">Model Name</label>
+                                                <input type="text" class="form-control" name="corpusName" ng-model="wikimodelname" required="true"/>
+                                            </div>
+                                            <button class="btn btn-primary" ng-click="createModel(wikimodelname)"><i class="fa fa-database" aria-hidden="true"></i> Create Model</button>
+                                        </form>
+                                    </td>
+                                <tr>                      
+                            <tr>
+                                <th>Remove</th>
+                                <th>Category</th>
+                                <th>Title</th>
+                                <th>View</th>                        
+                            </tr>
+                            <tr dir-paginate="document in corpus | itemsPerPage: corpDocsPerPage" pagination-id="docsForCorpus">
+                                <td><button class="btn btn-danger" ng-click="removeDocument(document.title)" title="Click to remove document from corpus."><i class="fa fa-trash" aria-hidden="true"></i></button></td>
+                                <td>{{document.category}}</td>
+                                <td>{{document.title}}</td>
+                                <td><a ng-href="https://en.wikipedia.org/wiki/{{ document.title.replace(' ', '_') }}" class="btn btn-default" target="wiki" title="Click to view document."><i class="fa fa-eye" aria-hidden="true"></i></a></td>                        
+                            </tr>
                         </table>
                         {% endraw %}
-                        <dir-pagination-controls boundary-links="true" template-url="{{url_for('static', filename='dirPagination.tpl.html')}}" pagination-id="docs"></dir-pagination-controls>   
-                    </div> 
-                </div>
-            </div>
-          </uib-tab>
-          <uib-tab heading="Corpus">
-              <spinner name="createModelSpinner" img-src="{{url_for('static', filename='spinner.gif')}}"></spinner>
-              <div class="panel panel-default" ng-show="showCorpus">
-                {% raw %}
-                <div class="panel-heading">{{corpus.length}} documents selected for corpus.</div>
-                <table class="table table-condensed table-hover">
-                        <tr>
-                            <td colspan="2">
-                                <div class="input-group">
-                                    <input type="number" class="form-control" ng-model="corpDocsPerPage"/>
-                                    <span class=input-group-addon>per page</span>
-                                </div>
-                            </td>
-                            <td colspan="2">
-                                <form class="form-inline">
-                                    <div class="form-group">
-                                        <label for="corpusName">Model Name</label>
-                                        <input type="text" class="form-control" name="corpusName" ng-model="wikimodelname" required="true"/>
-                                    </div>
-                                    <button class="btn btn-primary" ng-click="createModel(wikimodelname)"><i class="fa fa-database" aria-hidden="true"></i> Create Model</button>
-                                </form>
-                            </td>
-                        <tr>                      
-                    <tr>
-                        <th>Remove</th>
-                        <th>Category</th>
-                        <th>Title</th>
-                        <th>View</th>                        
-                    </tr>
-                    <tr dir-paginate="document in corpus | itemsPerPage: corpDocsPerPage" pagination-id="docsForCorpus">
-                        <td><button class="btn btn-danger" ng-click="removeDocument(document.title)" title="Click to remove document from corpus."><i class="fa fa-trash" aria-hidden="true"></i></button></td>
-                        <td>{{document.category}}</td>
-                        <td>{{document.title}}</td>
-                        <td><a ng-href="https://en.wikipedia.org/wiki/{{ document.title.replace(' ', '_') }}" class="btn btn-default" target="wiki" title="Click to view document."><i class="fa fa-eye" aria-hidden="true"></i></a></td>                        
-                    </tr>
-                </table>
-                {% endraw %}
-                <dir-pagination-controls boundary-links="true" template-url="{{url_for('static', filename='dirPagination.tpl.html')}}" pagination-id="docsForCorpus"></dir-pagination-controls>                   
-              </div>
-              <div class="panel panel-default" ng-hide="showCorpus">
-                  <div class="panel-heading">Log</div>
-                  <ul>
-                      <li ng-repeat="log in logs track by $index">
-                  </ul>
-              </div>
-          </uib-tab>          
-      </uib-tabset>        
+                        <dir-pagination-controls boundary-links="true" template-url="{{url_for('static', filename='dirPagination.tpl.html')}}" pagination-id="docsForCorpus"></dir-pagination-controls>                   
+                    </div>
+                    <div class="panel panel-default" ng-hide="showCorpus">
+                        <div class="panel-heading">Log</div>
+                        <ul>
+                            <li ng-repeat="log in logs track by $index">
+                        </ul>
+                    </div>
+                </uib-tab>          
+            </uib-tabset>  
+          </div>
+      </div>      
 {% endblock %}
 
