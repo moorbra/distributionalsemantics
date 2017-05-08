@@ -7,7 +7,6 @@ import datetime
 import json
 from gensim.models import Word2Vec
 from gensim.models.keyedvectors import KeyedVectors
-from scipy import spatial
 
 class Modeller(Resource):
     """Microservice for creating a semantic space from a corpus."""

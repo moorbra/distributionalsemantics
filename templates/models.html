@@ -1,0 +1,99 @@
+{% extends "layout.html" %}
+{% block title %}Distributional Models{% endblock %}
+{% block content%}
+    <div class="container" ng-controller="modelsController">
+        <div class="row">
+            <div class="jumbotron">                
+                <h1>Explore the semantic models</h1>
+                <p>
+                    Select a model and explore! Select multiple models for side-by-side comparison.
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-5">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Distributional Models</div> 
+                    {% raw %}
+                    <table class="table table-condensed table-hover">
+                        <tr>
+                            <td colspan="4">
+                                <div class="input-group">
+                                    <input type="number" class="form-control" ng-model="modelsPerPage"/>
+                                    <span class="input-group-addon">per page</span>
+                                </div>
+                            </td>
+                        <tr>                    
+                        <tr>
+                            <th></th>
+                            <th>Model</th>
+                            <th>Documents</th>
+                            <th>Terms</th>
+                        </tr>
+                        <tr dir-paginate="model in models | itemsPerPage: modelsPerPage" pagination-id="mods">
+                            <td><a class="btn btn-primary" ng-click="getModelDetails(model.modelname)"><i class="fa fa-folder-open" aria-hidden="true"></i></a></td>
+                            <td>{{model.modelname}}</td>
+                            <td>{{model.numberdocuments}}</td>
+                            <td>{{model.terms}}</td>
+                        </tr>
+                    </table>
+                    {% endraw %}
+                    <dir-pagination-controls boundary-links="true" template-url="{{url_for('static', filename='dirPagination.tpl.html')}}" pagination-id="mods"></dir-pagination-controls>
+                </div>
+            </div>
+        </div>
+        <div class="row">    
+            <div class="col-md-5">    
+                <div class="panel panel-default">
+                    {% raw %}
+                    <div class="panel-heading">Terms in model <mark>'{{selectedModel.modelname}}'</mark></div>
+                    <table class="table table-condensed table-hover">
+                        <thead>
+                        <tr>
+                            <td colspan="3">
+                                <div class="input-group">
+                                    <input type="number" class="form-control" ng-model="termsPerPage"/>
+                                    <span class="input-group-addon">per page</span>
+                                </div>
+                            </td>
+                        <tr>                    
+                        <tr>
+                            <th>Term</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr dir-paginate="term in selectedModel.terms | itemsPerPage: termsPerPage" pagination-id="trms">
+                            <td>{{term}}</td>
+                            <td><a class="btn btn-primary" ng-click="getTermSimilarities(term)"><i class="fa fa-search" aria-hidden="true"></i> View Similar Terms</a></td>
+                        </tr>
+                        </tbody>
+                    </table>                
+                    {% endraw %}
+                    <dir-pagination-controls boundary-links="true" template-url="{{url_for('static', filename='dirPagination.tpl.html')}}" pagination-id="trms"></dir-pagination-controls>
+                </div>
+            </div>
+            <div class="col-md-7">
+                <div class="panel panel-default">
+                    {% raw %}
+                    <div class="panel-heading">Terms most similar to <mark>'{{similarterms.term}}'</mark></div>
+                    <table class="table table-condensed table-hover">
+                        <caption>{{similarterms.sentence}}</caption>
+                        <tr>
+                            <th>Term</th>
+                            <th>Similarity</th>
+                            <th>Example Sentence</th>
+                        </tr>
+                        <tr ng-repeat="term in similarterms.similarterms">
+                            <td>{{term.term}}</td>
+                            <td>{{term.similarity}}</td>
+                            <td>{{term.sentence}}</td>
+                        </tr>
+                    </table>
+                    {% endraw %}
+                </div>
+            </div>
+        </div>            
+      </div>
+    </div>
+{% endblock %}

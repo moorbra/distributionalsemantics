@@ -71,4 +71,35 @@
             });
        };
     });
+
+    app.controller('modelsController', function($scope, $http, Flash, spinnerService) {
+        $scope.models = [];
+        $scope.modelsPerPage = 10;
+        $scope.selectedModel = null;
+        $scope.termsPerPage = 10;
+        $scope.similarterms = null;
+
+        $scope.getModels = function () {
+            $http.get('manifest/manifests')
+            .then(function (data, status, headers, config) {
+                $scope.models = data.data;
+            });
+        };
+
+        $scope.getModelDetails = function(modelname) {            
+            $http.get('manifest/manifests/' + modelname)
+            .then(function (data, status, headers, config) {
+                $scope.selectedModel = data.data;
+            });
+        };
+
+        $scope.getTermSimilarities = function(term) {
+            $http.get('similarity/' + $scope.selectedModel.modelname + '/'+ term)
+            .then(function (data, status, headers, config) {
+                $scope.similarterms = data.data;
+            });            
+        };
+
+        $scope.getModels();
+    });
 }());
