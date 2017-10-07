@@ -20,6 +20,7 @@ lib64/
 parts/
 sdist/
 var/
+wheels/
 *.egg-info/
 .installed.cfg
 *.egg
@@ -42,7 +43,11 @@ htmlcov/
 .cache
 nosetests.xml
 coverage.xml
+<<<<<<< HEAD
 *,cover
+=======
+*.cover
+>>>>>>> 5e5f0a7ed877cf0700f54d0c22f033e14a8a7c0a
 .hypothesis/
 
 # Translations
@@ -66,7 +71,11 @@ docs/_build/
 # PyBuilder
 target/
 
+<<<<<<< HEAD
 # IPython Notebook
+=======
+# Jupyter Notebook
+>>>>>>> 5e5f0a7ed877cf0700f54d0c22f033e14a8a7c0a
 .ipynb_checkpoints
 
 # pyenv
@@ -75,18 +84,40 @@ target/
 # celery beat schedule file
 celerybeat-schedule
 
+<<<<<<< HEAD
+=======
+# SageMath parsed files
+*.sage.py
+
+>>>>>>> 5e5f0a7ed877cf0700f54d0c22f033e14a8a7c0a
 # dotenv
 .env
 
 # virtualenv
+<<<<<<< HEAD
+=======
+.venv
+>>>>>>> 5e5f0a7ed877cf0700f54d0c22f033e14a8a7c0a
 venv/
 ENV/
 
 # Spyder project settings
 .spyderproject
+<<<<<<< HEAD
+=======
+.spyproject
+>>>>>>> 5e5f0a7ed877cf0700f54d0c22f033e14a8a7c0a
 
 # Rope project settings
 .ropeproject
 
+<<<<<<< HEAD
 # semantic models
 wikimodels/
+=======
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+>>>>>>> 5e5f0a7ed877cf0700f54d0c22f033e14a8a7c0a
