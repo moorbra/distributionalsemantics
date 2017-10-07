@@ -6,7 +6,7 @@
             "type": "python",
             "request": "launch",
             "stopOnEntry": false,
-            "pythonPath": "${config.python.pythonPath}",
+            "pythonPath": "C:\\Users\\moorb\\Anaconda3\\python.exe",
             "program": "${workspaceRoot}/run.py",
             "env": {
                 "FLASK_APP": "${workspaceRoot}/app.py"
