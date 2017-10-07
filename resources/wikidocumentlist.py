@@ -65,7 +65,7 @@ class WikipediaDocumentList(Resource):
             'format': 'json',
             'formatversion': 2,
             'prop': 'extracts',
-            'exlimit': '50',
+            'exlimit': 'max',
             'explaintext':True,
             'titles': str.join('|', documents),
             'exsectionformat': 'plain',
