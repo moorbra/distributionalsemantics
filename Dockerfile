@@ -5,16 +5,11 @@ WORKDIR /semantics
 
 # Install our requirements.txt
 ADD requirements.txt /semantics/requirements.txt
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+RUN python -m spacy download en_core_web_sm
 
 # Copy our code from the current folder to /app inside the container
 ADD . /semantics
-
-# Make port 5000 available for links and/or publish
-EXPOSE 80 
-
-# Environment Variables
-ENV NAME World
 
 # Define our command to be run when launching the container
 CMD ["python", "app.py"]

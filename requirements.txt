@@ -6,3 +6,6 @@ MarkupSafe
 Werkzeug
 itsdangerous
 six
+requests
+spacy
+gensim
